@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteMovingObserver">
+        <plugin name="catalog_url_rewrite_category_process_url_rewrite_moving" type="Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteMovingObserverPlugin" sortOrder="1" />
+    </type>
+    <type name="Magento\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteSavingObserver">
+        <plugin name="catalog_url_rewrite_category_process_url_rewrite_saving" type="Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteSavingObserverPlugin" sortOrder="1" />
+    </type>
+    <type name="Magento\CatalogUrlRewrite\Observer\CategoryUrlPathAutogeneratorObserver">
+        <plugin name="catalog_url_rewrite_category_process_url_path_autogenerator" type="Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\Observer\CategoryUrlPathAutogeneratorObserverPlugin" sortOrder="1" />
+    </type>
+    <type name="Magento\CatalogUrlRewrite\Model\Product\CategoriesUrlRewriteGenerator">
+        <plugin name="catalog_url_rewrite_unable_category_generations" type="Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\AvoidProductCategoriesUrlGeneration" />
+    </type>
+    <type name="Magento\CatalogUrlRewrite\Model\Product\CurrentUrlRewritesRegenerator">
+        <plugin name="catalog_url_rewrite_unable_category_generations_on_current" type="Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\AvoidProductCategoriesUrlGeneration" />
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="generate-product-urls" xsi:type="object">Magento\Indexer\Console\Command\IndexerInfoCommand</item>
+                <item name="generate-category-urls" xsi:type="object">Magento\Indexer\Console\Command\IndexerReindexCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

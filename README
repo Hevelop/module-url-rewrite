@@ -1,0 +1,13 @@
+Hevelop Url Rewrite
+=========================
+
+This module has the purpose of making asynchronous the saving of the rewrite url of categories and products.
+
+TODO:
+- for each product Hevelop/UrlRewrite/Model/UrlRewriteManager/Product generates the url of each
+  category that contains the product. The smart thing would be to only generates the urls of the
+  product for the changed category (or categories);
+- every time a category is saved, it regenerate urls for every store in which the category is used;
+  would be better to;
+- add cli command to generate product, category and product-category urls;
+- avoid using getAffectedProducts() on categories, fill and use another Object data attribute like getUrlAffectedProducts() instead;

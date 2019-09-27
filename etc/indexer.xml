@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="catalog_category_need_url_rewrite" view_id="catalog_category_need_url_rewrite" class="Hevelop\UrlRewrite\Model\Indexer\Category">
+        <title translate="true">Category Url Rewrite</title>
+        <description translate="true">Generate updated url rewrites for categories that need it (and associated products)</description>
+    </indexer>
+</config>
