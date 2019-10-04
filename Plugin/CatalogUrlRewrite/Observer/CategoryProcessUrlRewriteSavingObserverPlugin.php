@@ -7,6 +7,8 @@
 
 namespace Hevelop\UrlRewrite\Plugin\CatalogUrlRewrite\Observer;
 
+use Hevelop\UrlRewrite\Helper\Data;
+use Magento\Catalog\Model\CategoryRepository;
 use Magento\Framework\App\RequestInterface;
 use Magento\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteSavingObserver;
 use Magento\Framework\Event\Observer;
@@ -42,22 +44,38 @@ class CategoryProcessUrlRewriteSavingObserverPlugin
     protected $productUrlRewriteManager;
 
     /**
+     * @var Data
+     */
+    private $dataHelper;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
+    /**
      * CategoryProcessUrlRewriteSavingObserverPlugin constructor.
      * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfig
      * @param CategoryUrlRewriteManager $categoryUrlRewriteManager
      * @param ProductUrlRewriteManager $productUrlRewriteManager
+     * @param Data $dataHelper
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
         CategoryUrlRewriteManager $categoryUrlRewriteManager,
-        ProductUrlRewriteManager $productUrlRewriteManager
+        ProductUrlRewriteManager $productUrlRewriteManager,
+        Data $dataHelper,
+        CategoryRepository $categoryRepository
     ) {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
         $this->categoryUrlRewriteManager = $categoryUrlRewriteManager;
         $this->productUrlRewriteManager = $productUrlRewriteManager;
+        $this->dataHelper = $dataHelper;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -76,9 +94,13 @@ class CategoryProcessUrlRewriteSavingObserverPlugin
         if ($category->getParentId() == Category::TREE_ROOT_ID) {
             return;
         }
-        if ($category->dataHasChangedFor('url_key') || $category->getIsChangedProductList()) {
-            $this->categoryUrlRewriteManager->addFlagOnCategory($category);
-            $this->productUrlRewriteManager->addFlagOnCategoryAffectedProducts($category);
+        if ($category->dataHasChangedFor('url_key') && $category->getIsChangedProductList()) {
+            if ($this->dataHelper->shouldGenerateProductInCategoryUrl()) {
+                $this->categoryUrlRewriteManager->addFlagOnCategory($category);
+                // observer runs after resource save, must save category here
+                $this->categoryRepository->save($category);
+                $this->productUrlRewriteManager->addFlagOnCategoryAffectedProducts($category);
+            }
         }
     }
 }
