@@ -123,8 +123,8 @@ class Category implements \Magento\Framework\Indexer\ActionInterface
         }
         $ids = array_unique($ids);
         foreach ($ids as $categoryId) {
-            $this->generateCategoryUrl($categoryId);
-            if ($this->dataHelper->shouldGenerateProductInCategoryUrl()) {
+            $generated = $this->generateCategoryUrl($categoryId);
+            if ($generated && $this->dataHelper->shouldGenerateProductInCategoryUrl()) {
                 $this->generateProductsOperations($categoryId);
             }
         }
@@ -176,6 +176,8 @@ class Category implements \Magento\Framework\Indexer\ActionInterface
                 }
                 $this->categoryManager->setEntityAsProcessed($category);
                 $this->categoryRepository->save($category);
+
+                return true;
             }
         } catch (NoSuchEntityException $e) {
             $this->logger->error(sprintf(
@@ -184,6 +186,8 @@ class Category implements \Magento\Framework\Indexer\ActionInterface
                 $e->getMessage()
             ));
         }
+
+        return false;
     }
 
     private function generateProductsOperations($categoryId)
@@ -192,6 +196,7 @@ class Category implements \Magento\Framework\Indexer\ActionInterface
             /** @var Collection $operations */
             $operations = $this->collectionFactory->create();
             $operations->addCategoryFilter($categoryId);
+            // TODO: what if existing operations involve less products then current?
             if ($operations->count() === 0) {
                 $category = $this->categoryFactory->create();
                 $category->load($categoryId);
