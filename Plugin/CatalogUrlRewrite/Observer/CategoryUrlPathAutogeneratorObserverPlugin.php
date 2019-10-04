@@ -66,10 +66,10 @@ class CategoryUrlPathAutogeneratorObserverPlugin
         /** @var Category $category */
         $proceed($observer);
         $category = $observer->getEvent()->getCategory();
-        if ($category->getUrlKey() !== false && $category->dataHasChangedFor('url_key')) {
-            if (!$this->categoryUrlRewriteManager->entityNeedRewrite($category)) {
-                $this->categoryUrlRewriteManager->addFlagOnCategory($category);
-            }
+        if ($category->getUrlKey() !== false &&
+            ($category->dataHasChangedFor('url_key') || $category->dataHasChangedFor('url_path'))) {
+            $this->categoryUrlRewriteManager->addFlagOnCategory($category);
+
             if (!$category->isObjectNew()) {
                 $this->categoryUrlRewriteManager->addFlagOnCategoryChildren($category);
             }

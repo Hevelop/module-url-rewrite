@@ -237,10 +237,8 @@ class Category extends AbstractUrlRewriteManager
             ->addIdFilter($childrenIds)
             ->addAttributeToSelect('name');
         foreach ($categories as $c) {
-            if (!$this->entityNeedRewrite($c)) {
-                $this->addFlagOnCategory($c);
-                $this->categoryRepository->save($c);
-            }
+            $this->addFlagOnCategory($c);
+            $this->categoryRepository->save($c);
         }
     }
 
